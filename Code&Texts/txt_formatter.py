@@ -6,7 +6,7 @@ def format_txt(txt):
 
     current_dir = os.path.dirname(os.path.abspath(__file__))# Get the directory of the current script
     
-    file_path = os.path.join(current_dir, txt)  # Construct full path to the text file
+    file_path = os.path.join(current_dir, "Texts", txt)  # Construct full path to the text file
     
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Could not find file: {file_path}") # Check if file exists
