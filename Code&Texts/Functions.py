@@ -3,7 +3,7 @@ from collections import Counter
 import os # allows interaction with the operating system, needed for extracting filenames
 import txt_formatter
 
-def analyse(text, analysis_level='word', normalize=False):
+def analyse(text, analysis_level='word'):
 
     filename = os.path.basename(text)
     base_name = os.path.splitext(filename)[0]
@@ -26,7 +26,7 @@ def analyse(text, analysis_level='word', normalize=False):
     total_tokens = len(tokens)
     
     # Calculate entropy
-    def shannon_entropy(token_counts, total_tokens):
+    def shannon_entropy(token_counts, total_tokens, normalise=False):
         entropy = 0.0
         for count in token_counts.values(): # e.g. {'cat': 1, 'dog': 1, 'the': 1, 'tricked': 1}
             if count > 0:  # Avoid log(0) errors
@@ -37,7 +37,7 @@ def analyse(text, analysis_level='word', normalize=False):
         # When normalize=True, we scale the entropy to a 0-1 range
         # where 0 = completely predictable (only one unique unit)
         # and 1 = maximum possible unpredictability for the given vocabulary size
-        if normalize and len(token_counts) > 1:
+        if normalise and len(token_counts) > 1:
             max_entropy = math.log2(len(token_counts))
             entropy = entropy / max_entropy
         
@@ -60,7 +60,7 @@ def analyse(text, analysis_level='word', normalize=False):
 
     if analysis_level == 'word':
         results['word_entropy'] = entropy
-        results['word_entropy_normalized'] = shannon_entropy(token_counts, total_tokens)[0]
+        results['word_entropy_normalized'] = shannon_entropy(token_counts, total_tokens, normalise=True)[0]
         results['word_types'] = len(freq_dist)
         results['word_tokens'] = sum(freq_dist.values())
         results['type_token_ratio'] = results['word_types'] / results['word_tokens'] if results['word_tokens'] > 0 else 0
@@ -73,7 +73,7 @@ def analyse(text, analysis_level='word', normalize=False):
 
     elif analysis_level == 'phoneme':
         results['phoneme_entropy'] = entropy
-        results['phoneme_entropy_normalized'] = shannon_entropy(token_counts, total_tokens)[0]
+        results['phoneme_entropy_normalized'] = shannon_entropy(token_counts, total_tokens, normalise=True)[0]
         results['phoneme_types'] = len(freq_dist)   
         results['phoneme_tokens'] = sum(freq_dist.values())
         # TTR irrelevant: if phoneme_types > max because phoneme_tokens rises while phoneme_types plateaus, only useful in the first few hundred phonemes texts
