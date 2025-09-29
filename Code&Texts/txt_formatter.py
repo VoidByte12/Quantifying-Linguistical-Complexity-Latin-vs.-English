@@ -11,13 +11,13 @@ def format_txt(txt):
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Could not find file: {file_path}") # Check if file exists
     
-    with open(file_path, 'r', encoding='utf-8') as file: # opens file in read mode - FIXED: use file_path instead of txt
+    with open(file_path, 'r', encoding='utf-8') as file: # opens file in read mode
         file_content = file.read() 
         
     counter = 0
     char_list = []
 
-    for char in file_content:  # FIXED: use file_content instead of txt
+    for char in file_content:  # removes all text within []
         if char == '[':
             counter = 1
             continue # Skip the '[' character itself
